@@ -1,7 +1,4 @@
-try:
-    import colorlog as logging
-except ImportError:
-    import logging
+import logging
 import os.path
 import importlib
 

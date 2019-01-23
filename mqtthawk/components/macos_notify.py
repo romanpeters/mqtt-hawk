@@ -2,10 +2,7 @@
 brew install terminal-notifier
 pip install pync
 """
-try:
-    import colorlog as logging
-except ImportError:
-    import logging
+import logging
 from utils.mqtter import MQTTTopic
 from utils.configger import get_component_config
 

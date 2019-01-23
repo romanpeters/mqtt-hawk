@@ -1,10 +1,7 @@
 """
 brew install brightness
 """
-try:
-    import colorlog as logging
-except ImportError:
-    import logging
+import logging
 import subprocess
 import json
 from utils.mqtter import MQTTTopic
