@@ -35,11 +35,13 @@ def on_message(client, userdata, message):
         _LOGGER.exception(err)
 
 
-if __name__ == '__main__':  # ehh
-    plugins = [i['platform'] for i in config['components']]
-    _LOGGER.debug(f"Components to load: {plugins}")
-
-    components.load_plugins(plugins)
+if __name__ == '__main__':
+    if config.get('components'):
+        plugins = [i['platform'] for i in config['components']]
+        _LOGGER.debug(f"Components to load: {plugins}")
+        components.load_plugins(plugins)
+    else:
+        _LOGGER.warning("No components added to config.yaml")
 
     mqtt_conf = config['mqtt']
     _LOGGER.debug(f"MQTT config: {mqtt_conf}")
@@ -60,5 +62,3 @@ if __name__ == '__main__':  # ehh
         client.subscribe(topic)
 
     client.loop_forever()
-
-
