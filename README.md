@@ -20,35 +20,19 @@
 Very similar to [jpmens/mqttwarn](https://github.com/jpmens/mqttwarn), but with less features.
 
 MQTT Hawk features:
-- support for Python 3
+- support for Python 3.6+
 - YAML config inspired by [Home Assistant](https://github.com/home-assistant/home-assistant)
 - Pluggable components
 
 
- 
-
-                                                             
-                                                             
-                                                             
-
-
-
-  
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#### Installation
 ```
-
-
+$ git clone https://github.com/romanpeters/mqtt-hawk
+$ cd mqtt-hawk/
+$ pip install -r requirements.txt
+```
+Edit `config.yaml.example` and rename it to `config.yaml`.
+Install the dependencies for the components you're using.
+```
+$ python3 mqtthawk
+```
