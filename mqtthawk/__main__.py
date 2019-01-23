@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import sys
 import logging
 import paho.mqtt.client as mqtt
 import json
@@ -42,7 +40,7 @@ if __name__ == '__main__':
     m_conf = config['mqtt']
     _LOGGER.debug(f"MQTT config: {m_conf}")
 
-    client= mqtt.Client("mqttwarn-lite")
+    client= mqtt.Client('mqtthawk')
 
     if m_conf.get('username'):
         client.username_pw_set(username=m_conf['username'], password=m_conf['password'])

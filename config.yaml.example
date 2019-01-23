@@ -1,7 +1,7 @@
 logging: debug
 
 mqtt:
-  broker: "10.10.10.11"
+  broker: "127.0.0.1"
   port: 1883
   user: 
   password:
