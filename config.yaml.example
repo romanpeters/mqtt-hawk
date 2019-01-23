@@ -1,0 +1,12 @@
+logging: debug
+
+mqtt:
+  broker: "10.10.10.11"
+  port: 1883
+  user: 
+  password:
+
+components:
+  - platform: osxnotify
+    state_topic: macbook/notify
+    
