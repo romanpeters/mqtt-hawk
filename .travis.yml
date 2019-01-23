@@ -1,0 +1,19 @@
+language: python
+python:
+- 3.6.5
+
+before_install:
+- echo """logging: info
+mqtt:
+  broker: test.mosquitto.org
+  port: 1883
+  user:
+  password:
+components:
+""" > config.yaml
+
+install:
+- pip3 install -r requirements.txt
+
+script:
+- python mqtthawk
