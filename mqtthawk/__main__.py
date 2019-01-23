@@ -20,6 +20,11 @@ def on_connect(client, *args, **kwargs):
     _LOGGER.debug("Publishing birth message")
     client.publish("mqtthawk/state", "online", retain=True)
 
+def on_disconnect(client, *args, **kwargs):
+    _LOGGER.info(f"Disconnected from MQTT broker")
+    _LOGGER.debug("Publishing offline message")
+    client.publish("mqtthawk/state", "offline", retain=True)
+
 def on_message(client, userdata, message):
     _LOGGER.info(f"Message received: {message.payload.decode('utf-8')}")
     _LOGGER.info(f"\tTopic: {message.topic} {'[retained]' if message.retain else ''}")
@@ -53,6 +58,7 @@ if __name__ == '__main__':
         client.username_pw_set(username=mqtt_conf['username'], password=mqtt_conf['password'])
 
     client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
     client.connect(host=mqtt_conf['broker'], port=mqtt_conf['port'])
     client.will_set("mqtthawk/state", "offline")
     client.on_message = on_message
@@ -62,5 +68,11 @@ if __name__ == '__main__':
         client.subscribe(topic)
 
 
-    if not config.get('testrun'):
+    if config.get('testrun'):
+        import time
+        client.loop_start()
+        time.sleep(60)
+        client.disconnect()
+        client.loop_stop()
+    else:
         client.loop_forever()
