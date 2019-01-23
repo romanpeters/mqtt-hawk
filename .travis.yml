@@ -4,16 +4,16 @@ python:
 
 before_install:
   - |
-      echo """
-      testrun:
-      logging: info
-      mqtt:
-        broker: test.mosquitto.org
-        port: 1883
-        user:
-        password:
-      components:
-      """ > config.yaml
+    echo """
+    testrun:
+    logging: info
+    mqtt:
+      broker: test.mosquitto.org
+      port: 1883
+      user:
+      password:
+    components:
+    """ > config.yaml
 
 install:
   - pip3 install -r requirements.txt
