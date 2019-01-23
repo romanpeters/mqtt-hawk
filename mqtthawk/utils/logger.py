@@ -5,8 +5,7 @@ _LOGGER = logging.getLogger(__name__)
 def get_log_level(CONFIG):
     """ Parse config.yaml['logging'] to a logging level """
     if not CONFIG.get('logging'):
-        _LOGGER.warning("No logging configured in config.yaml")
-        return logging.NOTSET
+        return logging.CRITICAL
 
     config_logging = CONFIG['logging'].upper()
     log_levels = {"CRITICAL": logging.CRITICAL,

@@ -1,5 +1,10 @@
+try:
+    import colorlog as logging
+except ImportError:
+    import logging
+
 import yaml
-import logging
+
 
 _LOGGER = logging.getLogger(__name__)
 

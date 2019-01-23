@@ -2,8 +2,12 @@
 brew install terminal-notifier
 pip install pync
 """
-import logging
-from utils import MQTTTopic, get_component_config
+try:
+    import colorlog as logging
+except ImportError:
+    import logging
+from utils.mqtter import MQTTTopic
+from utils.configger import get_component_config
 
 import pync
 
@@ -11,8 +15,8 @@ _LOGGER = logging.getLogger(__name__)
 _CONFIG = get_component_config(__name__.split('.')[-1])
 
 
-@MQTTTopic(_CONFIG['state_topic'])
-def show_notification(json_value):
+@MQTTTopic(_CONFIG['topic'])
+def show_notification(client, userdata, json_value) -> None:
     """
     Shows a macOS NC notification
 
@@ -23,9 +27,5 @@ def show_notification(json_value):
           "open": "https://google.com"
          }
     """
-    try:
-        pync.Notifier.notify(**json_value)
-        _LOGGER.debug("Sent a pync notification")
-    except Exception as err:
-        _LOGGER.error(f"Error sending notification for {json_value}")
-        _LOGGER.exception(err)
+    _LOGGER.debug("Sending a pync notification")
+    pync.Notifier.notify(**json_value)

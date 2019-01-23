@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import logging
+try:
+    import colorlog as logging
+except ImportError:
+    import logging
 import paho.mqtt.client as mqtt
 import json
 import components
@@ -21,6 +23,10 @@ _LOGGER.info(f"Log level {_LOGGER.level}")
 
 _LOGGER.debug("Config: " + str(config))
 
+def on_connect(client, userdate, flag, rc):
+    _LOGGER.info(f"Connected to MQTT broker")
+    _LOGGER.debug("Publishing birth message")
+    client.publish("mqtthawk/state", "online", retain=True)
 
 def on_message(client, userdata, message):
     _LOGGER.info(f"Message received: {message.payload.decode('utf-8')}")
@@ -52,11 +58,11 @@ if __name__ == '__main__':
         client.username_pw_set(username=mqtt_conf['username'], password=mqtt_conf['password'])
         _LOGGER.info("Using MQTT username and password")
 
+    client.on_connect = on_connect
     client.connect(host=mqtt_conf['broker'], port=mqtt_conf['port'])
-    _LOGGER.info(f"Connected to MQTT broker {mqtt_conf['broker']}")
-
+    client.will_set("mqtthawk/state", "offline")
     client.on_message = on_message
-   
+
     for topic in component_dict.keys():
         _LOGGER.info(f"Subscribing to {topic}")
         client.subscribe(topic)

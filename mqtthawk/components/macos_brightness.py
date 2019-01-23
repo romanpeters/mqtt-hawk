@@ -1,8 +1,12 @@
 """
 brew install brightness
 """
+try:
+    import colorlog as logging
+except ImportError:
+    import logging
 import subprocess
-import logging
+import json
 from utils.mqtter import MQTTTopic
 from utils.configger import get_component_config
 
@@ -11,27 +15,35 @@ _CONFIG = get_component_config(__name__.split('.')[-1])
 
 
 @MQTTTopic(_CONFIG['command_topic'])
-def set_brightness(client, userdata, json_value) -> MQTTState:
+def set_brightness(client, userdata, json_value):
     """
     Set the screen brightness
 
     MQTT template:
         {"state": "ON", "brightness": 255}
     """
+    screen = {}
     if json_value['state'].upper() == "OFF":
-        brightness = 0
+        screen['brightness'] = 0
     else:
         if json_value.get('brightness'):
-            brightness = json_value['brightness'] / 255
+            screen['brightness'] = json_value['brightness']
         else:
             _LOGGER.debug("No brightness given, checking current brightness")
             result = subprocess.check_output(['brightness', '-l'])
-            brightness = float(result.split('.')[-1])
-            if brightness < 0.1:
-                _LOGGER.debug(f"Brightness was {brightness}, setting it to 0.5")
-                brightness = 0.5
-    command = ["brightness", str(brightness)]
+            _LOGGER.debug(f"Current brightness {float(result.strip().split()[-1])}")
+            screen['brightness'] = int(float(result.strip().split()[-1]) * 255)
+            if screen['brightness'] == 0:
+                _LOGGER.debug("Turned on with brightness 0, changing to brightness 50%")
+                screen['brightness'] = 127.5
 
-    _LOGGER.debug(f"running command '{command}'")
+    command = ["brightness", str(screen['brightness'] / 255)]
+    _LOGGER.debug(f"running command \'{' '.join(command)}\'")
     subprocess.run(command)
-    client.publish(_CONFIG['state_topic'], brightness*255)
+
+    if screen['brightness'] > 0:
+        screen['state'] = "ON"
+    else:
+        screen['state'] = "OFF"
+    _LOGGER.debug(f"Sending {json.dumps(screen)} to {_CONFIG['state_topic']}")
+    client.publish(_CONFIG['state_topic'], json.dumps(screen))
