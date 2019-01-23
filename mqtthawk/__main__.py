@@ -10,10 +10,11 @@ import utils
 _LOGGER = logging.getLogger(__name__)
 __author__ = 'Roman Peters <mail()romanpeters.nl>'
 
-config = utils.CONFIG
+config = utils.configger.CONFIG
+component_dict = utils.mqtter.COMPONENT_DICT
 
 # Configure logger
-log_level = utils.get_log_level()
+log_level = utils.logger.get_log_level(config)
 logging.basicConfig(level=log_level)
 _LOGGER.info(f"Log level {_LOGGER.level}")
 
@@ -24,10 +25,15 @@ _LOGGER.debug("Config: " + str(config))
 def on_message(client, userdata, message):
     _LOGGER.info(f"Message received: {message.payload.decode('utf-8')}")
     _LOGGER.info(f"\tTopic: {message.topic} {'[retained]' if message.retain else ''}")
+
+
+    component_func = utils.mqtter.COMPONENT_DICT[message.topic]
+    _LOGGER.debug(f"Calling function {component_func}")
+
     try:
-        utils.COMPONENT_DICT[message.topic](json.loads(message.payload))
+        component_func(client, userdata, json.loads(message.payload))
     except Exception as err:
-        _LOGGER.error(f"Error loading {utils.COMPONENT_DICT[message.topic]}, json.loads(message.payload)")
+        _LOGGER.error(f"Error loading {component_func}, {json.loads(message.payload)}")
         _LOGGER.exception(err)
 
 
@@ -37,21 +43,21 @@ if __name__ == '__main__':
 
     components.load_plugins(plugins)
 
-    m_conf = config['mqtt']
-    _LOGGER.debug(f"MQTT config: {m_conf}")
+    mqtt_conf = config['mqtt']
+    _LOGGER.debug(f"MQTT config: {mqtt_conf}")
 
-    client= mqtt.Client('mqtthawk')
+    client = mqtt.Client('mqtthawk')
 
-    if m_conf.get('username'):
-        client.username_pw_set(username=m_conf['username'], password=m_conf['password'])
+    if mqtt_conf.get('username'):
+        client.username_pw_set(username=mqtt_conf['username'], password=mqtt_conf['password'])
         _LOGGER.info("Using MQTT username and password")
 
-    client.connect(host=m_conf['broker'], port=m_conf['port'])
-    _LOGGER.info(f"Connected to MQTT broker {m_conf['broker']}")
+    client.connect(host=mqtt_conf['broker'], port=mqtt_conf['port'])
+    _LOGGER.info(f"Connected to MQTT broker {mqtt_conf['broker']}")
 
     client.on_message = on_message
    
-    for topic in utils.COMPONENT_DICT.keys():
+    for topic in component_dict.keys():
         _LOGGER.info(f"Subscribing to {topic}")
         client.subscribe(topic)
 
