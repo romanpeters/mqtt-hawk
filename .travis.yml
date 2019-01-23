@@ -7,10 +7,10 @@ before_install:
       echo """
       logging: info
       mqtt:
-      broker: test.mosquitto.org
-      port: 1883
-      user:
-      password:
+        broker: test.mosquitto.org
+        port: 1883
+        user:
+        password:
       components:
       """ > config.yaml
 
