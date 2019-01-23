@@ -1,11 +1,14 @@
+"""
+brew install terminal-notifier
+pip install pync
+"""
 import logging
-import utils
-from utils import MQTTTopic
+from utils import MQTTTopic, get_component_config
 
 import pync
 
 _LOGGER = logging.getLogger(__name__)
-_CONFIG = utils.get_component_config(__name__.split('.')[-1])
+_CONFIG = get_component_config(__name__.split('.')[-1])
 
 
 @MQTTTopic(_CONFIG['state_topic'])
