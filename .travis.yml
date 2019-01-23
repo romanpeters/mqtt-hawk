@@ -5,6 +5,7 @@ python:
 before_install:
   - |
       echo """
+      testrun:
       logging: info
       mqtt:
         broker: test.mosquitto.org

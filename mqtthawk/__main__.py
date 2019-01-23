@@ -61,4 +61,6 @@ if __name__ == '__main__':
         _LOGGER.info(f"Subscribing to {topic}")
         client.subscribe(topic)
 
-    client.loop_forever()
+
+    if not config.get('testrun'):
+        client.loop_forever()
