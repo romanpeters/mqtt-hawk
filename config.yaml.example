@@ -17,5 +17,7 @@ components:
   - platform: keystroke
     topic: mqtthawk/keystroke
 
-
+  - platform: command_line
+    command_topic: mqtthawk/command/set
+    state_topic: mqtthawk/command
 
