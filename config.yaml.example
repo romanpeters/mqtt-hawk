@@ -7,6 +7,9 @@ mqtt:
   password:
 
 components:
-  - platform: osxnotify
-    state_topic: macbook/notify
+  - platform: macos_notify
+    state_topic: mqtthawk/notify
     
+  - platform: macos_brightness
+    command_topic: mqtthawk/screen/set
+    state_topic: mqtthawk/screen
