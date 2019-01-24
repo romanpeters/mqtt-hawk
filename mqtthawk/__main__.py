@@ -15,28 +15,35 @@ component_dict = utils.mqtter.COMPONENT_DICT
 
 _LOGGER.debug("Config: " + str(config))
 
+
 def on_connect(client, *args, **kwargs):
     _LOGGER.info(f"Connected to MQTT broker")
     _LOGGER.debug("Publishing birth message")
     client.publish("mqtthawk/state", "online", retain=True)
+
 
 def on_disconnect(client, *args, **kwargs):
     _LOGGER.info(f"Disconnected from MQTT broker")
     _LOGGER.debug("Publishing offline message")
     client.publish("mqtthawk/state", "offline", retain=True)
 
+
 def on_message(client, userdata, message):
-    _LOGGER.info(f"Message received: {message.payload.decode('utf-8')}")
-    _LOGGER.info(f"\tTopic: {message.topic} {'[retained]' if message.retain else ''}")
-
-
-    component_func = utils.mqtter.COMPONENT_DICT[message.topic]
-    _LOGGER.debug(f"Calling function {component_func}")
+    _LOGGER.info(f"MQTT: {message.topic}: {message.payload.decode('utf-8')} {'[retained]' if message.retain else ''}")
 
     try:
-        component_func(client, userdata, json.loads(message.payload))
+        payload = json.loads(message.payload)
+    except ValueError:
+        _LOGGER.warning("Payload is not valid JSON")
+        payload = str(message.payload)
+
+    component_func = utils.mqtter.COMPONENT_DICT[message.topic]
+    _LOGGER.debug(f"Calling function {component_func}(client={client}, userdata={userdata}, payload={payload})")
+
+    try:
+        component_func(client=client, userdata=userdata, payload=payload)
     except Exception as err:
-        _LOGGER.error(f"Error loading {component_func}, {json.loads(message.payload)}")
+        _LOGGER.error(f"Error loading {component_func}, {payload}")
         _LOGGER.exception(err)
 
 

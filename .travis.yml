@@ -6,7 +6,7 @@ before_install:
   - |
     echo """
     testrun:
-    logging: info
+    logging: debug
     mqtt:
       broker: test.mosquitto.org
       port: 1883
