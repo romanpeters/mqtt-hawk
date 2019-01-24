@@ -21,3 +21,5 @@ components:
     command_topic: mqtthawk/command/set
     state_topic: mqtthawk/command
 
+  - platform: siri
+    topic: mqtthawk/siri
