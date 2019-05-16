@@ -4,6 +4,7 @@ import yaml
 
 
 _LOGGER = logging.getLogger(__name__)
+CONFIG = {"mqtt": {}}
 
 def read_env_vars(CONFIG):
     for i in ["MQTT_BROKER", "MQTT_PORT", "MQTT_USER", "MQTT_PASSWORD"]:
@@ -11,6 +12,7 @@ def read_env_vars(CONFIG):
             group, var = i.lower().split('_')
             CONFIG[group].update({var: os.environ[i]})
     return CONFIG
+
 
 try:
     # Read configuration
@@ -24,6 +26,7 @@ CONFIG = read_env_vars(CONFIG)
 if not CONFIG.get('components'):
     _LOGGER.warn("Loading all components")
     CONFIG['components'] = []
+
 
 def get_component_config(name):
     component_config = next((i for i in CONFIG['components'] if i['platform'] == name), None)
