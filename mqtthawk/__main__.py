@@ -56,7 +56,7 @@ if __name__ == '__main__':  # ehh
         client.username_pw_set(username=mqtt_conf['username'], password=mqtt_conf['password'])
 
     client.on_connect = on_connect
-    client.connect(host=mqtt_conf['broker'], port=mqtt_conf['port'])
+    client.connect(host=mqtt_conf['broker'], port=int(mqtt_conf['port']))
     client.will_set("mqtthawk/state", "offline")
     client.on_message = on_message
 
