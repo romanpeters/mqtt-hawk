@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+import os
 import paho.mqtt.client as mqtt
 import json
+import pathlib
 import components
 import utils
 
@@ -16,7 +18,7 @@ component_dict = utils.mqtter.COMPONENT_DICT
 _LOGGER.debug("Config: " + str(config))
 
 def on_connect(client, *args, **kwargs):
-    _LOGGER.info(f"Connected to MQTT broker")
+    _LOGGER.info("Connected to MQTT broker")
     _LOGGER.debug("Publishing birth message")
     client.publish("mqtthawk/state", "online", retain=True)
 
@@ -37,7 +39,10 @@ def on_message(client, userdata, message):
 
 if __name__ == '__main__':  # ehh
     plugins = [i['platform'] for i in config['components']]
-    _LOGGER.debug(f"Components to load: {plugins}")
+    if not plugins:
+        _LOGGER.info("Loading all plugins")
+    else:
+        _LOGGER.info(f"Components to load: {plugins}")
 
     components.load_plugins(plugins)
 

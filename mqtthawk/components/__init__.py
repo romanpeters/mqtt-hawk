@@ -16,14 +16,15 @@ def load_plugins(plugins):
         for plugin in python_files:
             plugin_name = plugin[:-3]  # Strip extension
 
-            if plugin_name in plugins:
+            if plugin_name in plugins or plugins == []:  # load all plugins if no plugins specified
                 _LOGGER.info("Loading plugin %s", plugin_name)
                 try:
                     importlib.import_module(f".{plugin_name}", package=__name__)
-                except (NameError, SyntaxError) as err:
-                    _LOGGER.error(f"Error loading {plugin_name}")
-                    _LOGGER.exception(err)
-                plugins.remove(plugin_name)
+                except (NameError, SyntaxError, Exception) as err:
+                    _LOGGER.warning(f"Error loading {plugin_name}")
+                    #_LOGGER.exception(err)
+                if plugins != []:
+                    plugins.remove(plugin_name)
             else:
                 _LOGGER.debug(f"Ignoring {plugin_name} because it's not in config.yaml")  
 

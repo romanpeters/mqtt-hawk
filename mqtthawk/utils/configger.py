@@ -18,16 +18,21 @@ try:
         CONFIG = yaml.load(yaml_file)
 except FileNotFoundError:
     _LOGGER.warn("Couldn't find config.yaml")
-    CONFIG = {}
 
 CONFIG = read_env_vars(CONFIG)
 
-
+if not CONFIG.get('components'):
+    _LOGGER.warn("Loading all components")
+    CONFIG['components'] = []
 
 def get_component_config(name):
     component_config = next((i for i in CONFIG['components'] if i['platform'] == name), None)
     if not component_config:
-        _LOGGER.error(f"Could not match components entry in config.yaml to {name}")
+        _LOGGER.warning(f"Could not match components entry in config.yaml to {name}, using defaults instead")
+        component_config = {"topic": f"mqtthawk/{name}",
+                            "command_topic": f"mqtthawk/{name}/set",
+                            "state_topic": f"mqtthawk/{name}",
+                            }
     else:
         _LOGGER.debug(f"Found component config for {name}")
-        return component_config
+    return component_config
