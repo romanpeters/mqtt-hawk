@@ -4,7 +4,7 @@ import yaml
 
 
 _LOGGER = logging.getLogger(__name__)
-CONFIG = {"mqtt": {}}
+CONFIG = {"mqtt": {}, "logging": "debug"}
 
 def read_env_vars(CONFIG):
     for i in ["MQTT_BROKER", "MQTT_PORT", "MQTT_USER", "MQTT_PASSWORD"]:
