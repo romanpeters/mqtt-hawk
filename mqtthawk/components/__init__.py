@@ -22,7 +22,7 @@ def load_plugins(plugins):
                     importlib.import_module(f".{plugin_name}", package=__name__)
                 except (NameError, SyntaxError, Exception) as err:
                     _LOGGER.warning(f"Error loading {plugin_name}")
-                    #_LOGGER.exception(err)
+                    _LOGGER.debug(err)
                 if plugins != []:
                     plugins.remove(plugin_name)
             else:
