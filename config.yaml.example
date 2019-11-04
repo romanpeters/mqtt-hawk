@@ -7,19 +7,6 @@ mqtt:
   password:
 
 components:
-  - platform: macos_notify
-    state_topic: mqtthawk/notify
+  - platform: print
+    state_topic: mqtthawk/print
     
-  - platform: macos_brightness
-    command_topic: mqtthawk/brightness/set
-    state_topic: mqtthawk/brightness
-
-  - platform: keystroke
-    topic: mqtthawk/keystroke
-
-  - platform: command_line
-    command_topic: mqtthawk/command/set
-    state_topic: mqtthawk/command
-
-  - platform: siri
-    topic: mqtthawk/siri
