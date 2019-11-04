@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+import os
 import paho.mqtt.client as mqtt
 import json
+import pathlib
 import components
 import utils
 
@@ -17,7 +19,7 @@ _LOGGER.debug("Config: " + str(config))
 
 
 def on_connect(client, *args, **kwargs):
-    _LOGGER.info(f"Connected to MQTT broker")
+    _LOGGER.info("Connected to MQTT broker")
     _LOGGER.debug("Publishing birth message")
     client.publish("mqtthawk/state", "online", retain=True)
 
@@ -66,7 +68,8 @@ if __name__ == '__main__':
 
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
-    client.connect(host=mqtt_conf['broker'], port=mqtt_conf['port'])
+    client.connect(host=mqtt_conf['broker'], port=int(mqtt_conf['port']))
+
     client.will_set("mqtthawk/state", "offline")
     client.on_message = on_message
 
