@@ -13,7 +13,7 @@ _CONFIG = get_component_config(__name__.split('.')[-1])
 
 
 @MQTTTopic(_CONFIG['topic'])
-def show_notification(client, userdata, json_value) -> None:
+def notify(client, userdata, payload) -> None:
     """
     Shows a macOS NC notification
 
@@ -25,4 +25,4 @@ def show_notification(client, userdata, json_value) -> None:
          }
     """
     _LOGGER.debug("Sending a pync notification")
-    pync.Notifier.notify(**json_value)
+    pync.Notifier.notify(**payload)
