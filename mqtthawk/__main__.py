@@ -7,6 +7,13 @@ import json
 import pathlib
 import components
 import utils
+try:
+    import coloredlogs
+    coloredlogs.install()
+except:
+    pass
+
+
 
 _LOGGER = logging.getLogger(__name__)
 __author__ = 'Roman Peters <mail()romanpeters.nl>'
