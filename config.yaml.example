@@ -8,5 +8,5 @@ mqtt:
 
 components:
   - platform: print
-    state_topic: mqtthawk/print
+    command_topic: mqtthawk/print
     

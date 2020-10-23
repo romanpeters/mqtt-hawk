@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 _CONFIG = get_component_config(__name__.split('.')[-1])
 
 
-@MQTTTopic(_CONFIG['topic'])
+@MQTTTopic(_CONFIG['command_topic'])
 def print(client, userdata, payload) -> None:
     """
     prints to the console
