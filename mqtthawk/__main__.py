@@ -60,7 +60,7 @@ if __name__ == '__main__':
     if config.get('components'):
         plugins = [i['platform'] for i in config['components']]
         _LOGGER.debug(f"Components to load: {plugins}")
-        components.load_plugins(plugins)
+        utils.loader.load_plugins(plugins)
     else:
         _LOGGER.warning("No components added to config.yaml")
 
