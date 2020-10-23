@@ -17,7 +17,7 @@ def read_env_vars(CONFIG):
 try:
     # Read configuration
     with open("config.yaml", 'r') as yaml_file:
-        CONFIG = yaml.load(yaml_file)
+        CONFIG = yaml.load(yaml_file, Loader=yaml.FullLoader)
 except FileNotFoundError:
     _LOGGER.warn("Couldn't find config.yaml")
 
